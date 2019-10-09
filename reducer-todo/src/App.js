@@ -1,33 +1,18 @@
 import React, { useReducer } from 'react';
 import './App.css';
 
-//reducers
-import { initialState, todoReducer } from './reducers/todoReducer';
-
 //components
-import TodoList from './components/TodoList';
-import TodoForm from './components/TodoForm';
+import TodoList from "./components/TodoList";
 
-function App() {
-  const[state, dispatch] = useReducer(todoReducer, initialState);
+//reducers
+import { initialState, reducer } from "./reducers/TodoReducer";
 
-  const addTodo = (item) => dispatch({type:'ADD_ITEM', playload: item})
-  const toggleTodo = (id) => dispatch({type: 'TOGGLE_ITEM', playload: id})
-  const clearComplete = () =>dispatch({type: "CLEAR_COMPLETE"})
-
-  return (
-    <div className="App">
-      <h1>To Do List</h1>
-      <TodoForm
-      addTodo={addTodo}
-      clearComplete={clearComplete}
-      />
-      <TodoList
-      todosArr={state.todosArr}
-      toggleTodo={toggleTodo}
-      />
-    </div>
-  );
+export default function App() {
+	const [state, dispatch] = useReducer(reducer, initialState);
+	return (
+		<div>
+			<h1>To Do List</h1>
+			<TodoList toDoList={state.toDoList} state={state} dispatch={dispatch} />
+		</div>
+	);
 }
-
-export default App;

@@ -1,11 +1,12 @@
 import React from 'react';
 
-const Todo = props => {
+const Todo = ({ item, dispatch }) => {
     return (
         <div
-            onClick={() => props.toggleTodo(props.item.id)}
-            className = {`items${props.item.completed ? 'completed': ''}`}>
-                <p>{props.item.item}</p>
+            className={`item${item.completed ? ' completed' : ''}`}
+            onClick={() => dispatch({ type: 'TOGGLE_ITEM', payload: item })}
+        >
+            <p>{item.item}</p>
         </div>
     )
 }
