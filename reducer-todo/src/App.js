@@ -7,6 +7,9 @@ import TodoList from "./components/TodoList";
 //reducers
 import { initialState, reducer } from "./reducers/TodoReducer";
 
+//styles
+import "./components/Todo.css";
+
 export default function App() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	return (
