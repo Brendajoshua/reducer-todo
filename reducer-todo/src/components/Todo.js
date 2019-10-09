@@ -1,14 +1,36 @@
 import React from 'react';
 
-const Todo = ({ item, dispatch }) => {
-    return (
-        <div
-            className={`item${item.completed ? ' completed' : ''}`}
-            onClick={() => dispatch({ type: 'TOGGLE_ITEM', payload: item })}
-        >
-            <p>{item.item}</p>
-        </div>
-    )
-}
+import { MARK_COMPLETE } from '../types';
 
-export default Todo;
+const Todos = ({ dispatch, todos }) => {
+  const markComplete = id => {
+    dispatch({
+      type: MARK_COMPLETE,
+      payload: { id }
+    });
+  };
+
+  return (
+    todos && (
+      <div>
+        {todos.map(item => {
+          console.log(todos);
+          return item.completed ? (
+            <>
+              <div key={item.id} style={{ textDecoration: 'line-through' }}>
+                {item.item}
+              </div>
+              {item.timeCompleted && <div>{item.timeCompleted}</div>}
+            </>
+          ) : (
+            <div key={item.id} onClick={() => markComplete(item.id)}>
+              {item.item}
+            </div>
+          );
+        })}
+      </div>
+    )
+  );
+};
+
+export default Todos;
