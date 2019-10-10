@@ -1,31 +1,45 @@
 import React, { useState } from 'react';
 
-const TodoForm = (props) => {
-    const [newToDo, setNewTodo] = useState ('')
+import { reducer, initialState } from '../reducers/todoReducer';
+import { INPUT_CHANGE, FORM_SUBMIT, CLEAR_COMPLETED } from '../types';
 
-    const handleChanges = event => {
-        setNewTodo(event.target.value);
-    }
+const TodoForm = ({ state, dispatch }) => {
+  const onValueChange = event => {
+    dispatch({
+      type: INPUT_CHANGE,
+      payload: { value: event.target.value }
+    });
+  };
 
-    const submitItem = event => {
-        event.preventDefault();
-        if (newToDo !== '') {
-            props.dispatch({ type: 'ADD_ITEM', payload: newToDo })
-            setNewTodo('');
-        }
-    };
+  const onFormSubmit = event => {
+    event.preventDefault();
+    dispatch({
+      type: FORM_SUBMIT
+    });
+  };
 
-    return (
-        <form className="sameLine" onSubmit={submitItem}>
-            <input
-            type="text"
-            value={newToDo}
-            name="item"
-            onChange={handleChanges}
-            />
-            <button>Add Todo</button>
-        </form>
-    )
-}
+  const clearComplete = event => {
+    event.preventDefault();
+    dispatch({
+      type: CLEAR_COMPLETED
+    });
+  };
+
+  return (
+    <div>
+      <form onSubmit={onFormSubmit}>
+        <input
+          type="text"
+          placeholder="Task"
+          onChange={onValueChange}
+          value={state.form}
+        />
+        <br />
+        <input type="submit" className="button" value="Add" />
+      </form>
+      <button onClick={clearComplete}>Clear complete</button>
+    </div>
+  );
+};
 
 export default TodoForm;

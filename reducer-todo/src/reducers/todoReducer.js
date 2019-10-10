@@ -1,60 +1,68 @@
+import dayjs from 'dayjs';
+
+import {
+  INPUT_CHANGE,
+  FORM_SUBMIT,
+  MARK_COMPLETE,
+  CLEAR_COMPLETED
+} from '../types';
+import uuid from 'uuid';
+import calendar from 'dayjs/plugin/calendar';
+
+dayjs.extend(calendar);
 export const initialState = {
-    todoItems: [
-        {
-            item: 'Learn about reducers',
-            completed: false,
-            id: 1
-        },
-        {
-            item: 'Read a book',
-            completed: false,
-            id: 2
-        }
-    ]
+  todos: [
+    {
+      id: 3892987589,
+      item: 'Learn about reducers',
+      completed: false,
+      timeCompleted: null
+    }
+  ],
+  form: ''
 };
 
-export const TOGGLE_ITEM = "TOGGLE_ITEM";
-export const ADD_ITEM = "ADD_ITEM";
-export const CLEAR_TODO = "CLEAR_TODO";
-export const ON_INPUT_CHANGE = 'ON_INPUT_CHANGE';
-
 export const reducer = (state, action) => {
-	switch (action.type) {
-		case TOGGLE_ITEM:
-			const toggleTodo = state.todoItems.map(todo => {
-				if (todo.id === action.payload.id) {
-					return { ...todo, completed: !todo.completed };
-				} else {
-					return todo;
-				}
-			});
+  switch (action.type) {
+    case INPUT_CHANGE:
+      return {
+        ...state,
+        form: action.payload.value
+      };
 
-			return {
-				...state,
-				todoItems: toggleTodo
-			};
-		case ADD_ITEM:
-			return {
-				...state,
-				todoItems: [
-					...state.todoItems,
-					{
-						item: action.payload,
-						id: Date.now(),
-						completed: false
-					}
-				]
-			};
-		case CLEAR_TODO:
-			return {
-				todoItems: state.todoItems.filter(item => !item.complete)
-			};
-		case ON_INPUT_CHANGE:
-			return {
-				todoItems: [...state, ...action.payload]
-			};
+    case FORM_SUBMIT:
+      return {
+        todos: [
+          ...state.todos,
+          {
+            id: uuid(),
+            item: state.form,
+            completed: false,
+            timeCompleted: null
+          }
+        ],
+        form: ''
+      };
 
-		default:
-			return state;
-	}
+    case MARK_COMPLETE:
+      return {
+        ...state,
+        todos: state.todos.map(todo => {
+          if (todo.id !== action.payload.id) return todo;
+          return {
+            id: todo.id,
+            item: todo.item,
+            completed: true,
+            timeCompleted: dayjs().calendar(dayjs(new Date()))
+          };
+        })
+      };
+    case CLEAR_COMPLETED:
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.completed === false)
+      };
+    default:
+      return state;
+  }
 };

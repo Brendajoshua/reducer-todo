@@ -1,21 +1,17 @@
 import React, { useReducer } from 'react';
-import './App.css';
+import Todos from './components/Todo';
+import TodoForm from './components/TodoForm';
+import { reducer, initialState } from './reducers/todoReducer';
 
-//components
-import TodoList from "./components/TodoList";
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-//reducers
-import { initialState, reducer } from "./reducers/TodoReducer";
+  return (
+    <div>
+      <Todos todos={state.todos} dispatch={dispatch} />
+      <TodoForm state={state} dispatch={dispatch} />
+    </div>
+  );
+};
 
-//styles
-import "./components/Todo.css";
-
-export default function App() {
-	const [state, dispatch] = useReducer(reducer, initialState);
-	return (
-		<div>
-			<h1>To Do List</h1>
-			<TodoList toDoList={state.toDoList} state={state} dispatch={dispatch} />
-		</div>
-	);
-}
+export default App;
